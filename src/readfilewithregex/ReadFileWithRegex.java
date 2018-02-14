@@ -5,15 +5,16 @@
  */
 package readfilewithregex;
 
+import excelexport.ExcelReport;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import model.PayerInfo;
@@ -87,7 +88,8 @@ public class ReadFileWithRegex {
         this.filepath = filepath;
     }
 
-    public void readstroke() throws FileNotFoundException, IOException {
+//    public void getListSMGS() throws FileNotFoundException, IOException {
+    public List<SMGS> getListSMGS() throws FileNotFoundException, IOException {
         String headerpatt = getPattern();
         String bodypatt = getBodypattern();
         String destfile = getFilepath();
@@ -101,14 +103,10 @@ public class ReadFileWithRegex {
 
         // For each line of input, try matching in it.
         String line;
-        int sum = 0;
-        int sumlines = 0;
         SMGS smgs = null;
         PayerInfo payerinfo = null;
         List<SMGS> listsmgs = new ArrayList();
-//        List<Sent> listsents = new ArrayList();
         List<Sent> listsents = null;
-//        int countpayerinfo = 0;
         while ((line = r.readLine()) != null) {
             if (line.contains("СМГС")) {
                 smgs = new SMGS();
@@ -128,10 +126,9 @@ public class ReadFileWithRegex {
                 payerinfo.setIskltarif(m.group(6));
                 payerinfo.setPog_vxod_stan(m.group(7));
                 payerinfo.setLengthiness(m.group(8));
-                listsents=new ArrayList();
+                listsents = new ArrayList();
                 payerinfo.setListsents(listsents);
-                listsmgs.get(listsmgs.size()-1).setPayerinfo(payerinfo);
-//                countpayerinfo++;
+                listsmgs.get(listsmgs.size() - 1).setPayerinfo(payerinfo);
             }
 
             Matcher mbody = bp.matcher(line);
@@ -152,40 +149,35 @@ public class ReadFileWithRegex {
                 sent.setAddsbors(mbody.group(14));
                 sent.setAddsbors(mbody.group(15));
                 sent.setTotal(mbody.group(16));
-//                System.out.println("size:"+listsmgs.size());
-                //here should check for emptiness of listsents
-                //if 
-                listsmgs.get(listsmgs.size()-1).getPayerinfo().getListsents().add(sent);
-//                listsents.add(sent);
-//                 listsmgs.get(listsmgs.size()-1).getPayerinfo().setListsents(listsents);
+                listsmgs.get(listsmgs.size() - 1).getPayerinfo().getListsents().add(sent);
             }
-//            if (payerinfo != null && smgs != null && listsents.size()>0) {
-//                payerinfo.setListsents(listsents);
-//                listsmgs.get(listsmgs.size()-1).setPayerinfo(payerinfo);
-//            }
-//            if (listsmgs.get(listsmgs.size()-1).getPayerinfo().getListsents()==null) {
-//                listsmgs.get(listsmgs.size()-1).getPayerinfo().setListsents(listsents);
-////                listsmgs.get(listsmgs.size()-1).setPayerinfo(payerinfo);
-//            }
         }
-        System.out.println("leng: " + listsmgs.size());
-//        for(SMGS s:listsmgs){
-////            System.out.println("pinfo "+s.getPayerinfo().getPayernum()+" has "+s.getPayerinfo().getListsents().size()+" wagons");
-//            for(Sent sent:s.getPayerinfo().getListsents()){
-//                System.out.println(sent.getStanotpr());
-//            }
+//        System.out.println("leng: " + listsmgs.size());
+//        for (Sent sent : listsmgs.get(2).getPayerinfo().getListsents()) {
+//            System.out.println(sent.getNumvag());
 //        }
-        for(Sent sent:listsmgs.get(4).getPayerinfo().getListsents()){
-            System.out.println(sent.getNumvag());
-        }
+        return listsmgs;
     }
 
     public static void main(String[] args) throws IOException {
+        final long startTime = System.nanoTime();
         ReadFileWithRegex rfreg = new ReadFileWithRegex();
         rfreg.setFilepath("F132");
         rfreg.setPattern(PatternTemplate.getPatternTemplate("headerpattern"));
         rfreg.setBodypattern(PatternTemplate.getPatternTemplate("regexpattern"));
-        rfreg.readstroke();
+//        System.out.println(rfreg.getListSMGS().size());
+        ExcelReport exc=new ExcelReport();
+        exc.setInput_file("input.xls");
+        exc.setOutput_file("output.xls");
+//        exc.setListSmgs(rfreg.getListSMGS());
+        List<PayerInfo> payerinfos=new ArrayList();
+        for(SMGS smgs:rfreg.getListSMGS()){
+            payerinfos.add(smgs.getPayerinfo());
+        }
+        exc.generateReport(payerinfos);
+//        exc.generateReport();
+        System.out.println("process time: "+TimeUnit.SECONDS.convert((System.nanoTime() - startTime), TimeUnit.NANOSECONDS)+"sec/ "+(System.nanoTime() - startTime)+" nanosec");
+//        rfreg.getListSMGS();
     }
 
 }
