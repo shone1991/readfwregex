@@ -25,28 +25,28 @@ public class Sent {
 
     private String dmper;
 
-    private String actualweight;
+    private int actualweight;
 
-    private String calcweight;
+    private int calcweight;
 
     private String numposclassetc;
 
-    private String fees;
+    private int fees;
 
-    private String sborgalabatermez;
+    private int sborgalabatermez;
 
-    private String addsbors;
+    private int addsbors;
 
-    private String nds;
+    private int nds;
 
-    private String total;
+    private int total;
 
     /**
      * Get the value of total
      *
      * @return the value of total
      */
-    public String getTotal() {
+    public int getTotal() {
         return total;
     }
 
@@ -55,7 +55,7 @@ public class Sent {
      *
      * @param total new value of total
      */
-    public void setTotal(String total) {
+    public void setTotal(int total) {
         this.total = total;
     }
 
@@ -64,7 +64,7 @@ public class Sent {
      *
      * @return the value of nds
      */
-    public String getNds() {
+    public int getNds() {
         return nds;
     }
 
@@ -73,7 +73,7 @@ public class Sent {
      *
      * @param nds new value of nds
      */
-    public void setNds(String nds) {
+    public void setNds(int nds) {
         this.nds = nds;
     }
 
@@ -82,7 +82,7 @@ public class Sent {
      *
      * @return the value of addsbors
      */
-    public String getAddsbors() {
+    public int getAddsbors() {
         return addsbors;
     }
 
@@ -91,7 +91,7 @@ public class Sent {
      *
      * @param addsbors new value of addsbors
      */
-    public void setAddsbors(String addsbors) {
+    public void setAddsbors(int addsbors) {
         this.addsbors = addsbors;
     }
 
@@ -100,7 +100,7 @@ public class Sent {
      *
      * @return the value of sborgalabatermez
      */
-    public String getSborgalabatermez() {
+    public int getSborgalabatermez() {
         return sborgalabatermez;
     }
 
@@ -109,7 +109,7 @@ public class Sent {
      *
      * @param sborgalabatermez new value of sborgalabatermez
      */
-    public void setSborgalabatermez(String sborgalabatermez) {
+    public void setSborgalabatermez(int sborgalabatermez) {
         this.sborgalabatermez = sborgalabatermez;
     }
 
@@ -118,7 +118,7 @@ public class Sent {
      *
      * @return the value of fees
      */
-    public String getFees() {
+    public int getFees() {
         return fees;
     }
 
@@ -127,7 +127,7 @@ public class Sent {
      *
      * @param fees new value of fees
      */
-    public void setFees(String fees) {
+    public void setFees(int fees) {
         this.fees = fees;
     }
 
@@ -154,7 +154,7 @@ public class Sent {
      *
      * @return the value of calcweight
      */
-    public String getCalcweight() {
+    public int getCalcweight() {
         return calcweight;
     }
 
@@ -163,7 +163,7 @@ public class Sent {
      *
      * @param calcweight new value of calcweight
      */
-    public void setCalcweight(String calcweight) {
+    public void setCalcweight(int calcweight) {
         this.calcweight = calcweight;
     }
 
@@ -172,7 +172,7 @@ public class Sent {
      *
      * @return the value of actualweight
      */
-    public String getActualweight() {
+    public int getActualweight() {
         return actualweight;
     }
 
@@ -181,7 +181,7 @@ public class Sent {
      *
      * @param actualweight new value of actualweight
      */
-    public void setActualweight(String actualweight) {
+    public void setActualweight(int actualweight) {
         this.actualweight = actualweight;
     }
 

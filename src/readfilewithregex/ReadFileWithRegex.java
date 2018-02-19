@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -141,22 +142,26 @@ public class ReadFileWithRegex {
                 sent.setWeight(mbody.group(6));
                 sent.setNumpervedom(mbody.group(7));
                 sent.setDmper(mbody.group(8));
-                sent.setActualweight(mbody.group(9));
-                sent.setCalcweight(mbody.group(10));
+                sent.setActualweight(Integer.parseInt(mbody.group(9).trim()));
+                sent.setCalcweight(Integer.parseInt(mbody.group(10).trim()));
                 sent.setNumposclassetc(mbody.group(11));
-                sent.setFees(mbody.group(12));
-                sent.setSborgalabatermez(mbody.group(13));
-                sent.setAddsbors(mbody.group(14));
-                sent.setAddsbors(mbody.group(15));
-                sent.setTotal(mbody.group(16));
+                sent.setFees(Integer.parseInt(mbody.group(12).trim()));
+                sent.setSborgalabatermez(Integer.parseInt(mbody.group(13).trim()));
+                sent.setAddsbors(Integer.parseInt(mbody.group(14).trim()));
+                sent.setAddsbors(Integer.parseInt(mbody.group(15).trim()));
+                sent.setTotal(Integer.parseInt(mbody.group(16).trim()));
                 listsmgs.get(listsmgs.size() - 1).getPayerinfo().getListsents().add(sent);
             }
         }
-//        System.out.println("leng: " + listsmgs.size());
-//        for (Sent sent : listsmgs.get(2).getPayerinfo().getListsents()) {
-//            System.out.println(sent.getNumvag());
-//        }
         return listsmgs;
+    }
+
+    public List<PayerInfo> getListPayerinfo(List<SMGS> smgslist) {
+        List<PayerInfo> payerinfos = new ArrayList();
+        for (SMGS smgs : smgslist) {
+            payerinfos.add(smgs.getPayerinfo());
+        }
+        return payerinfos;
     }
 
     public static void main(String[] args) throws IOException {
@@ -166,17 +171,22 @@ public class ReadFileWithRegex {
         rfreg.setPattern(PatternTemplate.getPatternTemplate("headerpattern"));
         rfreg.setBodypattern(PatternTemplate.getPatternTemplate("regexpattern"));
 //        System.out.println(rfreg.getListSMGS().size());
-        ExcelReport exc=new ExcelReport();
+        ExcelReport exc = new ExcelReport();
         exc.setInput_file("input.xls");
         exc.setOutput_file("output.xls");
 //        exc.setListSmgs(rfreg.getListSMGS());
-        List<PayerInfo> payerinfos=new ArrayList();
-        for(SMGS smgs:rfreg.getListSMGS()){
-            payerinfos.add(smgs.getPayerinfo());
-        }
+        List<PayerInfo> payerinfos=rfreg.getListPayerinfo(rfreg.getListSMGS());
+        Object[] ps=payerinfos.toArray();
+        System.out.println("arr:" +ps[0]);
+//        PayerInfo p=new PayerInfo();
+//        Field[] fields=p.getClass().getDeclaredFields();
+//        for(int i=0; i<fields.length; i++){
+//            System.out.println(fields[i].getName());
+//        }
+        System.out.println(payerinfos.toArray(new Object[]{})[0]);
         exc.generateReport(payerinfos);
 //        exc.generateReport();
-        System.out.println("process time: "+TimeUnit.SECONDS.convert((System.nanoTime() - startTime), TimeUnit.NANOSECONDS)+"sec/ "+(System.nanoTime() - startTime)+" nanosec");
+        System.out.println("process time: " + TimeUnit.SECONDS.convert((System.nanoTime() - startTime), TimeUnit.NANOSECONDS) + "sec/ " + (System.nanoTime() - startTime) + " nanosec");
 //        rfreg.getListSMGS();
     }
 
